@@ -17,6 +17,7 @@ interface Request
     public function getFiles();
     public function getUri();
     public function getPath();
+    public function getRelativePath();
     public function getMethod();
     public function getHttpAccept();
     public function getReferer();
