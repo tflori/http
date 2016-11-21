@@ -87,9 +87,6 @@ interface Response
 
     /**
      * Sends the headers and content
-     *
-     * @codeCoverageIgnore This function can not be tested because it uses native php functions
-     * @return void
      */
     public function send();
 }

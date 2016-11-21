@@ -152,7 +152,11 @@ class HttpResponse implements Response
         $this->setStatusCode($permanent ? 301 : 302);
     }
 
-    /** {@inheritdoc} */
+    /**
+     * {@inheritdoc}
+     *
+     * @codeCoverageIgnore This function can not be tested because it uses native php functions
+     */
     public function send()
     {
         foreach ($this->getHeaders() as $header) {
