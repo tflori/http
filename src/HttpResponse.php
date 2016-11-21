@@ -209,7 +209,7 @@ class HttpResponse implements Response
      * @codeCoverageIgnore This function can not be tested because it uses native php functions
      * @return void
      */
-    public function send() 
+    public function send()
     {
         foreach ($this->getHeaders() as $header) {
             header($header);

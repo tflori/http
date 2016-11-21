@@ -14,4 +14,5 @@ interface Response
     public function setContent($content);
     public function getContent();
     public function redirect($url);
+    public function send();
 }
