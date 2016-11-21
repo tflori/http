@@ -19,6 +19,7 @@ interface Request
     public function getPath();
     public function getRelativePath();
     public function getMethod();
+    public function getHeader($header);
     public function getHttpAccept();
     public function getReferer();
     public function getUserAgent();

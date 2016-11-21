@@ -9,6 +9,7 @@ class HttpRequest implements Request
     protected $server;
     protected $files;
     protected $cookies;
+    protected $inputStream;
 
     public function __construct(
         array $get,
@@ -214,14 +215,30 @@ class HttpRequest implements Request
     }
 
     /**
+     * Get the variable from $header.
+     *
+     * @param string $header
+     * @return string|null
+     */
+    public function getHeader($header)
+    {
+        try {
+            $header = str_replace('-', '_', strtoupper($header));
+            return $this->getServerVariable('HTTP_' . $header);
+        } catch (MissingRequestMetaVariableException $e) {
+            return null;
+        }
+    }
+
+    /**
      * Contents of the Accept: header from the current request, if there is one.
      *
      * @return string
-     * @throws MissingRequestMetaVariableException
+     * @deprecated use getHeader instead
      */
     public function getHttpAccept()
     {
-        return $this->getServerVariable('HTTP_ACCEPT');
+        return $this->getHeader('Accept');
     }
 
     /**
@@ -229,22 +246,23 @@ class HttpRequest implements Request
      * current page.
      *
      * @return string
-     * @throws MissingRequestMetaVariableException
+     * @deprecated use getHeader instead
      */
     public function getReferer()
     {
-        return $this->getServerVariable('HTTP_REFERER');
+        // may the future fix the typo
+        return $this->getHeader('Referer') ?: $this->getHeader('Referrer');
     }
 
     /**
      * Content of the User-Agent header from the request, if there is one.
      *
      * @return string
-     * @throws MissingRequestMetaVariableException
+     * @deprecated use getHeader instead
      */
     public function getUserAgent()
     {
-        return $this->getServerVariable('HTTP_USER_AGENT');
+        return $this->getHeader('User-Agent');
     }
 
     /**
@@ -255,7 +273,16 @@ class HttpRequest implements Request
      */
     public function getIpAddress()
     {
-        return $this->getServerVariable('REMOTE_ADDR');
+        $client  = $this->getHeader('Client-Ip');
+        $forward = $this->getHeader('X-Forwarded-For');
+
+        if (filter_var($client, FILTER_VALIDATE_IP)) {
+            return $client;
+        } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
+            return $forward;
+        } else {
+            return $this->getServerVariable('REMOTE_ADDR');
+        }
     }
 
     /**

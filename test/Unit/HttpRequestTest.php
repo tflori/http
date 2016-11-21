@@ -250,6 +250,22 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
         $request->getMethod();
     }
 
+    public function testGetHeader()
+    {
+        $request = new HttpRequest([], [], [], [], [
+            'HTTP_HOST' => 'example.com'
+        ]);
+
+        self::assertSame('example.com', $request->getheader('Host'));
+    }
+
+    public function testGetHeaderReturnsNull()
+    {
+        $request = new HttpRequest([], [], [], [], []);
+
+        self::assertNull($request->getHeader('Unknown'));
+    }
+
     public function testGetUri()
     {
         $server = ['REQUEST_URI' => '/test?abc=def'];
@@ -324,34 +340,16 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException Http\MissingRequestMetaVariableException
-     */
-    public function testGetHttpAcceptException()
-    {
-        $request = new HttpRequest([], [], [], [], []);
-        $request->getHttpAccept();
-    }
-
     public function testGetReferer()
     {
         $server = ['HTTP_REFERER' => 'http://www.example.com/abc?s=a&b=c'];
 
         $request = new HttpRequest([], [], [], [], $server);
 
-        $this->assertEquals(
-            $request->getReferer(),
-            $server['HTTP_REFERER']
+        self::assertEquals(
+            $server['HTTP_REFERER'],
+            $request->getReferer()
         );
-    }
-
-    /**
-     * @expectedException Http\MissingRequestMetaVariableException
-     */
-    public function testGetRefererException()
-    {
-        $request = new HttpRequest([], [], [], [], []);
-        $request->getReferer();
     }
 
     public function testGetUserAgent()
@@ -366,15 +364,6 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException Http\MissingRequestMetaVariableException
-     */
-    public function testGetUserAgentException()
-    {
-        $request = new HttpRequest([], [], [], [], []);
-        $request->getUserAgent();
-    }
-
     public function testGetIpAddress()
     {
         $server = ['REMOTE_ADDR' => '127.0.0.1'];
@@ -382,8 +371,32 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
         $request = new HttpRequest([], [], [], [], $server);
 
         $this->assertEquals(
-            $request->getIpAddress(),
-            $server['REMOTE_ADDR']
+            $server['REMOTE_ADDR'],
+            $request->getIpAddress()
+        );
+    }
+
+    public function testGetIpAddressFromXForwardedFor()
+    {
+        $server = ['REMOTE_ADDR' => '127.0.0.1', 'HTTP_X_FORWARDED_FOR' => '8.8.8.8'];
+
+        $request = new HttpRequest([], [], [], [], $server);
+
+        $this->assertEquals(
+            $server['HTTP_X_FORWARDED_FOR'],
+            $request->getIpAddress()
+        );
+    }
+
+    public function testGetIpAddressFromClientIp()
+    {
+        $server = ['REMOTE_ADDR' => '127.0.0.1', 'HTTP_CLIENT_IP' => '8.8.8.8'];
+
+        $request = new HttpRequest([], [], [], [], $server);
+
+        $this->assertEquals(
+            $server['HTTP_CLIENT_IP'],
+            $request->getIpAddress()
         );
     }
 
