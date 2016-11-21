@@ -74,13 +74,7 @@ class HttpResponse implements Response
         511 => 'Network Authentication Required',
     ];
 
-    /**
-     * Sets the HTTP status code.
-     *
-     * @param  integer $statusCode
-     * @param  string  $statusText (optional)
-     * @return void
-     */
+    /** {@inheritdoc} */
     public function setStatusCode($statusCode, $statusText = null)
     {
         if ($statusText === null
@@ -93,36 +87,19 @@ class HttpResponse implements Response
         $this->statusText = (string) $statusText;
     }
 
-    /**
-     * Returns the HTTP status code
-     * @return int
-     */
+    /** {@inheritdoc} */
     public function getStatusCode()
     {
         return $this->statusCode;
     }
 
-    /**
-     * Adds a header with the given name.
-     *
-     * @param  string $name
-     * @param  string $value
-     * @return void
-     */
+    /** {@inheritdoc} */
     public function addHeader($name, $value)
     {
         $this->headers[$name][] = (string) $value;
     }
 
-    /**
-     * Sets a new header for the given name.
-     *
-     * Replaces all headers with the same names.
-     *
-     * @param  string $name
-     * @param  string $value
-     * @return void
-     */
+    /** {@inheritdoc} */
     public function setHeader($name, $value)
     {
         $this->headers[$name] = [
@@ -130,11 +107,7 @@ class HttpResponse implements Response
         ];
     }
 
-    /**
-     * Returns an array with the HTTP headers.
-     *
-     * @return array
-     */
+    /** {@inheritdoc} */
     public function getHeaders()
     {
         $headers = array_merge(
@@ -146,23 +119,13 @@ class HttpResponse implements Response
         return $headers;
     }
 
-    /**
-     * Adds a new cookie.
-     *
-     * @param  Cookie $cookie
-     * @return void
-     */
+    /** {@inheritdoc} */
     public function addCookie(Cookie $cookie)
     {
         $this->cookies[$cookie->getName()] = $cookie;
     }
 
-    /**
-     * Deletes a cookie.
-     *
-     * @param  Cookie $cookie
-     * @return void
-     */
+    /** {@inheritdoc} */
     public function deleteCookie(Cookie $cookie)
     {
         $cookie->setValue('');
@@ -170,45 +133,26 @@ class HttpResponse implements Response
         $this->cookies[$cookie->getName()] = $cookie;
     }
 
-    /**
-     * Sets the body content.
-     *
-     * @param  string $content
-     * @return void
-     */
+    /** {@inheritdoc} */
     public function setContent($content)
     {
         $this->content = (string) $content;
     }
 
-    /**
-     * Returns the body content.
-     *
-     * @return string
-     */
+    /** {@inheritdoc} */
     public function getContent()
     {
         return $this->content;
     }
 
-    /**
-     * Sets the headers for a redirect.
-     *
-     * @param  string $url
-     * @return void
-     */
-    public function redirect($url)
+    /** {@inheritdoc} */
+    public function redirect($url, $permanent = false)
     {
         $this->setHeader('Location', $url);
-        $this->setStatusCode(301);
+        $this->setStatusCode($permanent ? 301 : 302);
     }
-    
-    /**
-     * Sends the headers and content
-     *
-     * @codeCoverageIgnore This function can not be tested because it uses native php functions
-     * @return void
-     */
+
+    /** {@inheritdoc} */
     public function send()
     {
         foreach ($this->getHeaders() as $header) {

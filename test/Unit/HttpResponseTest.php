@@ -79,6 +79,16 @@ class HttpResponseTest extends \PHPUnit_Framework_TestCase
         $response = new HttpResponse;
         $response->redirect('http://test.com');
         $this->assertEquals($response->getHeaders(), [
+            'HTTP/1.1 302 Found',
+            'Location: http://test.com'
+        ]);
+    }
+
+    public function testRedirectPermanent()
+    {
+        $response = new HttpResponse;
+        $response->redirect('http://test.com', true);
+        $this->assertEquals($response->getHeaders(), [
             'HTTP/1.1 301 Moved Permanently',
             'Location: http://test.com'
         ]);

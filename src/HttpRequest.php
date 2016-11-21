@@ -27,13 +27,7 @@ class HttpRequest implements Request
         $this->inputStream = $inputStream;
     }
 
-    /**
-     * Returns a parameter value or a default value if none is set.
-     *
-     * @param  string $key
-     * @param  string $defaultValue (optional)
-     * @return string
-     */
+    /** {@inheritdoc} */
     public function getParameter($key, $defaultValue = null)
     {
         if (array_key_exists($key, $this->postParameters)) {
@@ -47,13 +41,7 @@ class HttpRequest implements Request
         return $defaultValue;
     }
 
-    /**
-     * Returns a query parameter value or a default value if none is set.
-     *
-     * @param  string $key
-     * @param  string $defaultValue (optional)
-     * @return string
-     */
+    /** {@inheritdoc} */
     public function getQueryParameter($key, $defaultValue = null)
     {
         if (array_key_exists($key, $this->getParameters)) {
@@ -63,13 +51,7 @@ class HttpRequest implements Request
         return $defaultValue;
     }
 
-    /**
-     * Returns a body parameter value or a default value if none is set.
-     *
-     * @param  string $key
-     * @param  string $defaultValue (optional)
-     * @return string
-     */
+    /** {@inheritdoc} */
     public function getBodyParameter($key, $defaultValue = null)
     {
         if (array_key_exists($key, $this->postParameters)) {
@@ -79,13 +61,7 @@ class HttpRequest implements Request
         return $defaultValue;
     }
 
-    /**
-     * Returns a file value or a default value if none is set.
-     *
-     * @param  string $key
-     * @param  string $defaultValue (optional)
-     * @return string
-     */
+    /** {@inheritdoc} */
     public function getFile($key, $defaultValue = null)
     {
         if (array_key_exists($key, $this->files)) {
@@ -95,13 +71,7 @@ class HttpRequest implements Request
         return $defaultValue;
     }
 
-    /**
-     * Returns a cookie value or a default value if none is set.
-     *
-     * @param  string $key
-     * @param  string $defaultValue (optional)
-     * @return string
-     */
+    /** {@inheritdoc} */
     public function getCookie($key, $defaultValue = null)
     {
         if (array_key_exists($key, $this->cookies)) {
@@ -111,115 +81,67 @@ class HttpRequest implements Request
         return $defaultValue;
     }
 
-    /**
-     * Returns all parameters.
-     *
-     * @return array
-     */
+    /** {@inheritdoc} */
     public function getParameters()
     {
         return array_merge($this->getParameters, $this->postParameters);
     }
 
-    /**
-     * Returns all query parameters.
-     *
-     * @return array
-     */
+    /** {@inheritdoc} */
     public function getQueryParameters()
     {
         return $this->getParameters;
     }
 
-    /**
-     * Returns all body parameters.
-     *
-     * @return array
-     */
+    /** {@inheritdoc} */
     public function getBodyParameters()
     {
         return $this->postParameters;
     }
 
-    /**
-    * Returns raw values from the read-only stream that allows you to read raw data from the request body.
-    *
-    * @return string
-    */
+    /** {@inheritdoc} */
     public function getRawBody()
     {
         return $this->inputStream;
     }
 
-    /**
-     * Returns a Cookie Iterator.
-     *
-     * @return array
-     */
+    /** {@inheritdoc} */
     public function getCookies()
     {
         return $this->cookies;
     }
 
-    /**
-     * Returns a File Iterator.
-     *
-     * @return array
-     */
+    /** {@inheritdoc} */
     public function getFiles()
     {
         return $this->files;
     }
 
-    /**
-     * The URI which was given in order to access this page
-     *
-     * @return string
-     * @throws MissingRequestMetaVariableException
-     */
+    /** {@inheritdoc} */
     public function getUri()
     {
         return $this->getServerVariable('REQUEST_URI');
     }
 
-    /**
-     * Return just the path
-     *
-     * @return string
-     */
+    /** {@inheritdoc} */
     public function getPath()
     {
         return strtok($this->getServerVariable('REQUEST_URI'), '?');
     }
 
-    /**
-     * Get path relative to executed script
-     *
-     * @return string
-     */
+    /** {@inheritdoc} */
     public function getRelativePath()
     {
         return substr($this->getPath(), strlen(dirname($this->getServerVariable('PHP_SELF'))));
     }
 
-    /**
-     * Which request method was used to access the page;
-     * i.e. 'GET', 'HEAD', 'POST', 'PUT'.
-     *
-     * @return string
-     * @throws MissingRequestMetaVariableException
-     */
+    /** {@inheritdoc} */
     public function getMethod()
     {
         return $this->getServerVariable('REQUEST_METHOD');
     }
 
-    /**
-     * Get the variable from $header.
-     *
-     * @param string $header
-     * @return string|null
-     */
+    /** {@inheritdoc} */
     public function getHeader($header)
     {
         try {
@@ -230,47 +152,26 @@ class HttpRequest implements Request
         }
     }
 
-    /**
-     * Contents of the Accept: header from the current request, if there is one.
-     *
-     * @return string
-     * @deprecated use getHeader instead
-     */
+    /** {@inheritdoc} */
     public function getHttpAccept()
     {
         return $this->getHeader('Accept');
     }
 
-    /**
-     * The address of the page (if any) which referred the user agent to the
-     * current page.
-     *
-     * @return string
-     * @deprecated use getHeader instead
-     */
+    /** {@inheritdoc} */
     public function getReferer()
     {
         // may the future fix the typo
         return $this->getHeader('Referer') ?: $this->getHeader('Referrer');
     }
 
-    /**
-     * Content of the User-Agent header from the request, if there is one.
-     *
-     * @return string
-     * @deprecated use getHeader instead
-     */
+    /** {@inheritdoc} */
     public function getUserAgent()
     {
         return $this->getHeader('User-Agent');
     }
 
-    /**
-     * The IP address from which the user is viewing the current page.
-     *
-     * @return string
-     * @throws MissingRequestMetaVariableException
-     */
+    /** {@inheritdoc} */
     public function getIpAddress()
     {
         $client  = $this->getHeader('Client-Ip');
@@ -285,11 +186,7 @@ class HttpRequest implements Request
         }
     }
 
-    /**
-     * Checks to see whether the current request is using HTTPS.
-     *
-     * @return boolean
-     */
+    /** {@inheritdoc} */
     public function isSecure()
     {
         return (array_key_exists('HTTPS', $this->server)
@@ -297,12 +194,7 @@ class HttpRequest implements Request
         );
     }
 
-    /**
-     * The query string, if any, via which the page was accessed.
-     *
-     * @return string
-     * @throws MissingRequestMetaVariableException
-     */
+    /** {@inheritdoc} */
     public function getQueryString()
     {
         return $this->getServerVariable('QUERY_STRING');
