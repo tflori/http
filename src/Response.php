@@ -83,7 +83,7 @@ interface Response
      * @param  string $url
      * @param  bool   $permanent
      */
-    public function redirect($url, $permanent);
+    public function redirect($url, $permanent = false);
 
     /**
      * Sends the headers and content
