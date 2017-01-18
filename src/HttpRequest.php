@@ -132,7 +132,8 @@ class HttpRequest implements Request
     /** {@inheritdoc} */
     public function getRelativePath()
     {
-        return substr($this->getPath(), strlen(dirname($this->getServerVariable('PHP_SELF'))));
+        $dir = dirname($this->getServerVariable('PHP_SELF'));
+        return substr($this->getPath(), strlen(rtrim($dir, '/')));
     }
 
     /** {@inheritdoc} */

@@ -328,6 +328,17 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
         self::assertSame('/imprint', $relativePath);
     }
 
+    public function testGetRelativePathForRoot()
+    {
+        $server = ['REQUEST_URI' => '/imprint', 'PHP_SELF' => '/app.php'];
+
+        $request = new HttpRequest([], [], [], [], $server);
+
+        $relativePath = $request->getRelativePath();
+
+        self::assertSame('/imprint', $relativePath);
+    }
+
     public function testGetHttpAccept()
     {
         $server = ['HTTP_ACCEPT' => 'Accept: audio/*; q=0.2, audio/basic'];
