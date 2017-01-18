@@ -319,7 +319,7 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRelativePath()
     {
-        $server = ['REQUEST_URI' => '/path/to/myapp/imprint', 'PHP_SELF' => '/path/to/myapp/app.php'];
+        $server = ['REQUEST_URI' => '/path/to/myapp/imprint', 'SCRIPT_NAME' => '/path/to/myapp/app.php'];
 
         $request = new HttpRequest([], [], [], [], $server);
 
@@ -330,7 +330,7 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRelativePathForRoot()
     {
-        $server = ['REQUEST_URI' => '/imprint', 'PHP_SELF' => '/app.php'];
+        $server = ['REQUEST_URI' => '/imprint', 'SCRIPT_NAME' => '/app.php'];
 
         $request = new HttpRequest([], [], [], [], $server);
 
