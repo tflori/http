@@ -123,6 +123,14 @@ interface Request
     public function getMethod();
 
     /**
+     * Returns the scheme used to request the page;
+     * i.e. 'http', 'https'
+     *
+     * @return string
+     */
+    public function getScheme();
+
+    /**
      * Get the variable from $header.
      *
      * @param string $header
