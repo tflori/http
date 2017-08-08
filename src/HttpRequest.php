@@ -172,6 +172,11 @@ class HttpRequest implements Request
         return $this->getHeader('User-Agent');
     }
 
+    public function getScheme()
+    {
+        return $this->isSecure() ? 'https' : 'http';
+    }
+
     /** {@inheritdoc} */
     public function getIpAddress()
     {
@@ -190,9 +195,15 @@ class HttpRequest implements Request
     /** {@inheritdoc} */
     public function isSecure()
     {
-        return (array_key_exists('HTTPS', $this->server)
-            && $this->server['HTTPS'] !== 'off'
-        );
+        $forwardedProtocol = $this->getHeader('X-Forwarded-Proto');
+
+        if (array_key_exists('HTTPS', $this->server) && $this->server['HTTPS'] !== 'off') {
+            return true;
+        } elseif ($forwardedProtocol && $forwardedProtocol === 'https') {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /** {@inheritdoc} */

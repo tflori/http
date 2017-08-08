@@ -428,8 +428,23 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
         $request = new HttpRequest([], [], [], [], ['HTTPS' => 'off']);
         $this->assertFalse($request->isSecure());
 
+        $request = new HttpRequest([], [], [], [], ['HTTPS' => 'off', 'HTTP_X_FORWARDED_PROTO' => 'http']);
+        $this->assertFalse($request->isSecure());
+
         $request = new HttpRequest([], [], [], [], ['HTTPS' => 'on']);
         $this->assertTrue($request->isSecure());
+
+        $request = new HttpRequest([], [], [], [], ['HTTPS' => 'off', 'HTTP_X_FORWARDED_PROTO' => 'https']);
+        $this->assertTrue($request->isSecure());
+    }
+
+    public function testGetScheme()
+    {
+        $request = new HttpRequest([], [], [], [], ['HTTPS' => 'on']);
+        $this->assertSame('https', $request->getScheme());
+
+        $request = new HttpRequest([], [], [], [], ['HTTPS' => 'off']);
+        $this->assertSame('http', $request->getScheme());
     }
 
     public function testGetQueryString()
