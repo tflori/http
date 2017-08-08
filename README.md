@@ -38,6 +38,7 @@ $request->getRawBody();
 $request->getCookies();
 $request->getFiles();
 $request->getMethod();
+$request->getScheme();
 $request->getHttpAccept();
 $request->getReferer();
 $request->getUserAgent();
