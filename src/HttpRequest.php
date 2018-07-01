@@ -27,6 +27,17 @@ class HttpRequest implements Request
         $this->inputStream = $inputStream;
     }
 
+    /**
+     * Create a Request object from super globals ($_GET, $_POST, $_COOKIE etc.)
+     *
+     * @return HttpRequest
+     * @codeCoverageIgnore trivial
+     */
+    public static function createFromGlobals()
+    {
+        return new static($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER, file_get_contents('php://input'));
+    }
+
     /** {@inheritdoc} */
     public function getParameter($key, $defaultValue = null)
     {
