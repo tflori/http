@@ -17,13 +17,16 @@ composer require tflori/http
 
 ### Request
 
-The Request class provides an object oriented wrapper around the PHP superglobals. This makes it possible to inject it as a dependency into any of your classes that require it.
+The Request class provides an object oriented wrapper around the PHP superglobals. This makes it possible to inject it
+as a dependency into any of your classes that require it.
 
 
 ```php
 use Http\HttpRequest;
 
 $request = new HttpRequest($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER, file_get_contents('php://input'));
+// equals to:
+$request = HttpRequest::createFromGlobals();
 ```
 
 Now you can use the following methods on the `$request` object:
@@ -51,7 +54,9 @@ Please note that both GET and POST parameters are merged together and accessible
 
 ### Response
 
-The `HttpResponse` object is the data holder for the HTTP response. It has no constructor dependencies and can be instantiated with just:
+The `HttpResponse` object is the data holder for the HTTP response. It has no constructor dependencies and can be
+instantiated with just:
+
 ```php
 use Http\HttpResponse;
 
@@ -70,7 +75,8 @@ $response->setContent($content);
 $response->redirect($url);
 ```
 
-If you don't supply a status text with `setStatusCode` then an appropriate default status text will be selected for the HTTP status code if available.
+If you don't supply a status text with `setStatusCode` then an appropriate default status text will be selected for the
+HTTP status code if available.
 
 `addHeader` adds a new header value without overwriting existing values, `setHeader` will overwrite an existing value.
 
@@ -79,22 +85,24 @@ The `redirect` method will set the status code and text for a 301 redirect.
 `deleteCookie` will set the cookie content to nothing and put the expiration in the past.
 
 The following two methods are available to get the current data in the response:
+
 ```php
 $response->getHeaders();
 $response->getContent();
 ```
 
 To send the response use the following method:
+
 ```php
 $response->send();
 ```
-> make sure not to send the response twice as you will get an error message.
 
-**The second parameter of `header` must be false. Otherwise existing headers will be overwritten.**
+> make sure not to send the response twice as you will get an error message.
 
 ### Cookies
 
-To avoid `new` calls in your classes and to have the ability to set default cookie settings for you application, there is a `CookieBuilder` class that you can use to create your cookie objects. It has the following methods available:
+To avoid `new` calls in your classes and to have the ability to set default cookie settings for you application, there
+is a `CookieBuilder` class that you can use to create your cookie objects. It has the following methods available:
 
 ```php
 $cookieBuilder->setDefaultDomain($domain); // defaults to NULL
@@ -128,13 +136,13 @@ use Http\CookieBuilder;
 
 $loader = require_once __DIR__ . '/vendor/autoload.php';
 
-$cookieBuilder = new CookieBuilder;
+$cookieBuilder = new CookieBuilder();
 
 // Disable the secure flag because this is only an example
 $cookieBuilder->setDefaultSecure(false);
 
-$request = new HttpRequest($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER, file_get_contents('php://input'));
-$response = new HttpResponse;
+$request = HttpRequest::createFromGlobals();
+$response = new HttpResponse();
 
 $content = '<h1>Hello World</h1>';
 $content .= $request->getCookie('TestCookie', 'Cookie is not set.');
